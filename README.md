@@ -1,5 +1,6 @@
 # checkerbase
 
+```
  Usage:
  python3 checkerbase.py [MODULE]                    for user interactive
  python3 checkerbase.py INPUTFILE OUTPUTFILE
@@ -11,7 +12,7 @@
  PROXYTYPE  = y for automatic fetch from cagriari.com
               n for no
               FILENAME for file
-              
+```
               
               
               
