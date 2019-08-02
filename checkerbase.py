@@ -173,6 +173,7 @@ def checkerThread():
 	global totalReqs
 	global totalHits
 	global atLine
+	global comboList
 	currentProxy = None
 	while not comboList.empty():
 		if killThreads:
