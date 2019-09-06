@@ -34,3 +34,4 @@ def auth_cloudflare(domain):
 # print(auth_cloudflare("itorrents.org"))
 # Returns (Requests.sessions.Session, RequestsCookieJar)
 # Can be used like: requests.get(...., cookies=auth_cloudflare(...))
+# NOT TESTED
