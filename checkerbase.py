@@ -47,10 +47,10 @@ else:
 		print("[FATAL] Combo file {} not found".format(comboFile))
 		exit()
 
-outfilename = "checkerbase-out.txt"
+outfilename = "checkerbase-"+modulename+"-out.txt"
 outi = 1
 while os.path.isfile(outfilename):
-	outfilename = "checkerbase-out-"+str(outi)+".txt"
+	outfilename = "checkerbase-"+modulename+"-out-"+str(outi)+".txt"
 	outi += 1
 
 if len(sys.argv) > 2:
