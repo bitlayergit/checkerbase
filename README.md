@@ -1,4 +1,4 @@
-# checkerbase
+# checkerbase (beta)
 
 ```
  Usage:
@@ -16,4 +16,4 @@
               
               
               
-just for testing out
+just for trying out, please report any bugs and i'll try to fix them
