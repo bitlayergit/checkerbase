@@ -17,3 +17,8 @@
               
               
 just for trying out, please report any bugs and i'll try to fix them
+
+# Disclaimer
+
+Only use it with your own accounts, and check with the website's TOS if it's approved to run such script on their website.<br>
+Use at your own risk.
